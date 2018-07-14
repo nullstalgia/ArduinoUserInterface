@@ -6,6 +6,24 @@ The *Arduino User Interface* library requires a *Nokia 5110 LCD* display and 4 p
 
 ![alt_text](images/ArduinoUIShield.JPG "Arduino UI Shield")
 
+
+
+
+
+|                      Arduino UI Shield                      |
+| :---------------------------------------------------------: |
+| ![alt_text](images/ArduinoUIShield.JPG "Arduino UI Shield") |
+
+
+
+
+
+|                                                             |                                                              |
+| :---------------------------------------------------------: | ------------------------------------------------------------ |
+| ![alt_text](images/ArduinoUIShield.JPG "Arduino UI Shield") | Unfortunately this shield is not commercially available, so you will need to build your own.  PCB files and a schematic can be found at the GitHub link below.   You can also just wire up the display and buttons on a protoboard.  Find the hookup guide by following the GitHub link. |
+
+
+
 Unfortunately this shield is not commercially available, so you will need to build your own.  PCB files and a schematic can be found at the GitHub link below.   You can also just wire up the display and buttons on a protoboard.  Find the hookup guide by following the GitHub link.
 
  
