@@ -6,7 +6,7 @@ The *Arduino User Interface* library requires a *Nokia 5110 LCD* display and 4 p
 
 
 
-![](images\ArduinoUIShield.JPG)
+![alt_text](images/ArduinoUIShield.JPG "Arduino UI Shield")
 
 
 
