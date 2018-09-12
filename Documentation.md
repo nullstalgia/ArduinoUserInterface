@@ -45,7 +45,7 @@ If you prefer to wire your own, here is a hookup guide:
 
 ![alt_text](images/HookupGuide731.png "Hookup Guide")
 
-**Important note:**  The contrast setting for each LCD display is different.  If the setting is too low, the screen will always be blank.  If too high, the screen will be black.  The contrast is set in software using the *lcdSetContrast()* function.  The easiest way to test your board is with the *Example1_SetContrast*  sketch found in the *examples* folder.  Run the sketch, then press the *Up* and *Down* buttons to set the contrast.
+**Important note:**  The contrast setting for each LCD display is different.  If the setting is too low, the screen will always be blank.  If too high, the screen will be black.  The contrast is set in software using the *lcdSetContrast()* function.  The easiest way to test your board is with the *Example1_SetContrast*  sketch found in the *examples* folder.  Run the sketch, press and hold the *Up* and *Down* buttons to find the optimal value, then press *Set* to set the contrast.
 
 
 
