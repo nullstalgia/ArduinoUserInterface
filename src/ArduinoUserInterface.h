@@ -34,7 +34,7 @@
 #ifndef ArduinoUserInterface_h
 #define ArduinoUserInterface_h
 
-#include "arduino.h"
+#include "Arduino.h"
 #include <avr/pgmspace.h>
 
 
@@ -120,12 +120,13 @@ class ArduinoUserInterface
     // public functions
     //
     ArduinoUserInterface(void);
-    void connectToPins(byte _lcdClockPin, byte _lcdDataInPin, byte _lcdDataControlPin, byte _lcdChipEnablePin, byte _buttonAnalogPin);
+    void connectToPins(byte _lcdClockPin, byte _lcdDataInPin, byte _lcdDataControlPin, byte _lcdChipEnablePin, byte _buttonAnalogPin = 0, byte _buttonDownPin = 0, byte _buttonUpPin = 0, byte _buttonBackPin = 0, byte _buttonSelectPin = 0, byte _buttonAltSelectPin = 0);
     void displayAndExecuteMenu(MENU_ITEM *menu);
     void displaySlider(int minValue, int maxValue, int step, int initialValue, char *label, void (*callbackFunc)(byte, int));
     void displayFloatSlider(float minValue, float maxValue, float step, float initialValue, char *label, byte digitsRightOfDecimal, void (*callbackFunc)(byte, float));
     void clearDisplaySpace(void);
     byte getButtonEvent(void);
+    void setButtonActive(bool _buttonActiveValue);
     boolean intInRange(int value, int lowerValue, int upperValue);
     void drawButtonBar(char *leftButtonText, char *rightButtonText);
     void lcdPrintInt(int n);
@@ -167,6 +168,13 @@ class ArduinoUserInterface
     byte lcdCursorRowY;
 
     byte buttonAnalogPin;
+    bool buttonUseAnalog;
+    bool buttonActiveValue;
+    byte buttonUpPin;
+    byte buttonDownPin;
+    byte buttonBackPin;
+    byte buttonSelectPin;
+    byte buttonAltSelectPin;
     byte buttonState;
     byte buttonID;
     unsigned long buttonEventStartTime;

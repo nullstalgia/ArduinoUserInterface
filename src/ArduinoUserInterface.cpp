@@ -138,10 +138,17 @@ ArduinoUserInterface::ArduinoUserInterface(void)
 //          _lcdDataControlPin = digital pin that connects to LCD's control pin (DC)
 //          _lcdChipEnablePin = digital pin that connects to the LCD's chip enable pin (CE)
 //          _buttonAnalogPin = analog pin that connects to the buttons
-//
+//          Set _buttonAnalogPin to 0 to use 5 seperate buttons.
+//          _buttonDownPin
+//          _buttonUpPin
+//          _buttonBackPin
+//          _buttonSelectPin
+//          _buttonAltSelectPin = Alternate Select, set to 0/leave blank if not using.
 void ArduinoUserInterface::connectToPins(byte _lcdClockPin, byte _lcdDataInPin, 
                               byte _lcdDataControlPin, byte _lcdChipEnablePin,
-                              byte _buttonAnalogPin)
+                              byte _buttonAnalogPin, byte _buttonDownPin, 
+                              byte _buttonUpPin, byte _buttonBackPin, 
+                              byte _buttonSelectPin, byte _buttonAltSelectPin)
 {
   //
   // assign IO pin numbers
@@ -151,7 +158,17 @@ void ArduinoUserInterface::connectToPins(byte _lcdClockPin, byte _lcdDataInPin,
   lcdDataControlPin = _lcdDataControlPin;
   lcdChipEnablePin = _lcdChipEnablePin;
   buttonAnalogPin = _buttonAnalogPin;
-  
+  buttonDownPin = _buttonDownPin;
+  buttonUpPin = _buttonUpPin;
+  buttonBackPin = _buttonBackPin;
+  buttonSelectPin = _buttonSelectPin;
+  if(_buttonAltSelectPin == 0){
+    buttonAltSelectPin = _buttonSelectPin;
+  } else {
+    buttonAltSelectPin = _buttonAltSelectPin;
+  }
+  buttonActiveValue = LOW;
+
 
   //
   // initialize the hardware and clear the display
@@ -959,10 +976,23 @@ const byte RIGHT_BUTTON_CENTER_X = 65;
 
 
 //
+// Set the active state of the buttons.
+//
+void ArduinoUserInterface::setButtonActive(bool _buttonActiveValue)
+{
+  buttonActiveValue = _buttonActiveValue;
+}
+
+//
 // initialize the buttons
 //
 void ArduinoUserInterface::buttonsInitialize(void)
 {
+  if(buttonAnalogPin == 0){
+    buttonUseAnalog = false;
+  } else {
+    buttonUseAnalog = true;
+  }
   buttonState = WAITING_FOR_BUTTON_DOWN_STATE;
 }
 
@@ -1153,33 +1183,45 @@ byte ArduinoUserInterface::getButtonEvent(void)
 //
 byte ArduinoUserInterface::readButtonsToGetButtonID(void)
 {
-  int buttonAnalogValue;
+  if(buttonUseAnalog){
+    int buttonAnalogValue;
 
-  //
-  // determine analog voltage readings based on the resistor ladder
-  //
-  const int DOWN_BUTTON_VALUE = 1024.0 * 0.658;
-  const int UP_BUTTON_VALUE = 1024.0 * 0.476;
-  const int BACK_BUTTON_VALUE = 1024.0 * 0.312;
-  const int SELECT_BUTTON_VALUE = 1024.0 * 0.0;
-  
-  //
-  // read the button voltage, then determine which button it is
-  //
-  buttonAnalogValue = analogRead(buttonAnalogPin);
-  
-  if (intInRange(buttonAnalogValue, DOWN_BUTTON_VALUE - 40, DOWN_BUTTON_VALUE + 40))
-    return(BUTTON_ID_DOWN);
+    //
+    // determine analog voltage readings based on the resistor ladder
+    //
+    const int DOWN_BUTTON_VALUE = 1024.0 * 0.658;
+    const int UP_BUTTON_VALUE = 1024.0 * 0.476;
+    const int BACK_BUTTON_VALUE = 1024.0 * 0.312;
+    const int SELECT_BUTTON_VALUE = 1024.0 * 0.0;
+    
+    //
+    // read the button voltage, then determine which button it is
+    //
+    buttonAnalogValue = analogRead(buttonAnalogPin);
+    
+    if (intInRange(buttonAnalogValue, DOWN_BUTTON_VALUE - 40, DOWN_BUTTON_VALUE + 40))
+      return(BUTTON_ID_DOWN);
 
-  if (intInRange(buttonAnalogValue, UP_BUTTON_VALUE - 40, UP_BUTTON_VALUE + 40))
-    return(BUTTON_ID_UP);
+    if (intInRange(buttonAnalogValue, UP_BUTTON_VALUE - 40, UP_BUTTON_VALUE + 40))
+      return(BUTTON_ID_UP);
 
-  if (intInRange(buttonAnalogValue, BACK_BUTTON_VALUE - 40, BACK_BUTTON_VALUE + 40))
-    return(BUTTON_ID_BACK);
+    if (intInRange(buttonAnalogValue, BACK_BUTTON_VALUE - 40, BACK_BUTTON_VALUE + 40))
+      return(BUTTON_ID_BACK);
 
-  if (intInRange(buttonAnalogValue, SELECT_BUTTON_VALUE - 0, SELECT_BUTTON_VALUE + 80))
-    return(BUTTON_ID_SELECT);
-
+    if (intInRange(buttonAnalogValue, SELECT_BUTTON_VALUE - 0, SELECT_BUTTON_VALUE + 80))
+      return(BUTTON_ID_SELECT);
+  } else {
+    if(digitalRead(buttonDownPin) == buttonActiveValue)
+      return(BUTTON_ID_DOWN);
+    if(digitalRead(buttonUpPin) == buttonActiveValue)
+      return(BUTTON_ID_UP);
+    if(digitalRead(buttonBackPin) == buttonActiveValue)
+      return(BUTTON_ID_BACK);
+    if(digitalRead(buttonSelectPin) == buttonActiveValue)
+      return(BUTTON_ID_SELECT);
+    if(digitalRead(buttonAltSelectPin) == buttonActiveValue)
+      return(BUTTON_ID_SELECT);
+  }
   return(BUTTON_ID_NONE);      
 }
 
